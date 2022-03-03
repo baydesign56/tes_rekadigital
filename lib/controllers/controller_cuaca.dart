@@ -1,26 +1,21 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tes_rekadigital/controllers/controller_cuaca.dart';
-import 'package:tes_rekadigital/models/model_list_city.dart';
+import 'package:tes_rekadigital/models/model_list_cuaca.dart';
 
-class ControllerCity extends GetxController {
-  bool load = false;
+class ControllerCuaca extends GetxController {
+  bool load = true;
   String? errorMessage;
-  List<ModelListCIty>? modelListCity;
-  ModelListCIty? selectedCity;
-  ControllerCuaca controllerCuaca = Get.put(ControllerCuaca());
+  List<ModelListCuaca> modelListCuaca = [];
+  ModelListCuaca? selectCuaca;
 
-  selec(ModelListCIty select) {
-    selectedCity = select;
-    controllerCuaca.getCuca(selectedCity!.id.toString());
-    if (Get.isBottomSheetOpen == true) Get.back();
+  selectIndexCuaca(int index) {
+    selectCuaca = modelListCuaca[index];
     update();
   }
 
-  getCity() async {
+  getCuca(String id) async {
     load = true;
     errorMessage = null;
     update();
@@ -33,12 +28,11 @@ class ControllerCity extends GetxController {
           receiveTimeout: 8000,
           responseType: ResponseType.plain,
         ),
-      ).get("https://ibnux.github.io/BMKG-importer/cuaca/wilayah.json");
+      ).get("https://ibnux.github.io/BMKG-importer/cuaca/$id.json");
 
       if (res.statusCode == 200) {
-        modelListCity = modelListCItyFromJson(res.data);
-        selectedCity = modelListCity![0];
-        controllerCuaca.getCuca(selectedCity!.id.toString());
+        modelListCuaca = modelListCuacaFromJson(res.data);
+        selectCuaca = modelListCuaca[0];
         load = false;
         log(res.data);
         update();

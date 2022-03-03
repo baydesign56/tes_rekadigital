@@ -4,9 +4,13 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:tes_rekadigital/controllers/controller_city.dart';
+import 'package:tes_rekadigital/controllers/controller_cuaca.dart';
 import 'package:tes_rekadigital/models/model_list_cuaca.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
+
+import 'components/list_cuaca.dart';
+import 'components/top.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -16,237 +20,191 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  // ControllerCuaca controllerCity = Get.put(ControllerCuaca());
   ControllerCity controllerCity = Get.put(ControllerCity());
 
   @override
   void initState() {
     super.initState();
-    controllerCity.getCuca();
+    controllerCity.getCity();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ControllerCity>(builder: (value) {
-      return value.load
+    return GetBuilder<ControllerCity>(builder: (value1) {
+      return value1.load
           ? const Scaffold(
               backgroundColor: Colors.white,
-              body: Center(child: CircularProgressIndicator()))
-          : value.errorMessage == null
-              ? Scaffold(
-                  backgroundColor: Colors.white,
-                  body: SingleChildScrollView(
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            color: Colors.blue,
-                            child: Column(children: [
-                              const SizedBox(
-                                height: 50,
-                              ),
-                              GetBuilder<ControllerCity>(builder: (value) {
-                                return value.selectCuaca == null
-                                    ? const SizedBox(
-                                        width: 0,
-                                        height: 0,
-                                      )
-                                    : top(value.selectCuaca!);
-                              }),
-                              const SizedBox(
-                                height: 90,
-                              ),
-                              wavew(),
-                            ]),
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
+          : value1.errorMessage == null
+              ? GetBuilder<ControllerCuaca>(builder: (value) {
+                  return value.load
+                      ? const Scaffold(
+                          backgroundColor: Colors.white,
+                          body: Center(
+                            child: CircularProgressIndicator(),
                           ),
-                          GetBuilder<ControllerCity>(builder: (value) {
-                            return Container(
-                              color: Colors.white,
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(15),
-                                    child: Row(
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                        )
+                      : value.errorMessage == null
+                          ? Scaffold(
+                              backgroundColor: Colors.white,
+                              body: SingleChildScrollView(
+                                child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        color: Colors.blue,
+                                        child: Column(children: [
+                                          const SizedBox(
+                                            height: 50,
+                                          ),
+                                          value.selectCuaca == null
+                                              ? const SizedBox(
+                                                  width: 0,
+                                                  height: 0,
+                                                )
+                                              : top(),
+                                          const SizedBox(
+                                            height: 90,
+                                          ),
+                                          wavew(),
+                                        ]),
+                                      ),
+                                      Container(
+                                        color: Colors.white,
+                                        child: Column(
                                           children: [
-                                            const Text(
-                                              "Hari ini",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
+                                            Padding(
+                                              padding: const EdgeInsets.all(15),
+                                              child: Row(
+                                                children: [
+                                                  Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      const Text(
+                                                        "Hari ini",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      Container(
+                                                        width: 50,
+                                                        height: 2,
+                                                        color: Colors.black,
+                                                      )
+                                                    ],
+                                                  ),
+                                                  const SizedBox(width: 15),
+                                                  Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      const Text(
+                                                        "Besok",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.grey,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      Container(
+                                                        width: 50,
+                                                        height: 2,
+                                                        color:
+                                                            Colors.transparent,
+                                                      )
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
                                             ),
-                                            Container(
-                                              width: 50,
-                                              height: 2,
-                                              color: Colors.black,
-                                            )
+                                            SingleChildScrollView(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                child: Row(
+                                                  children: [
+                                                    const SizedBox(
+                                                      width: 20,
+                                                    ),
+                                                    for (var i = 0;
+                                                        i <
+                                                            value.modelListCuaca
+                                                                .length;
+                                                        i++)
+                                                      GestureDetector(
+                                                          onTap: () {
+                                                            value
+                                                                .selectIndexCuaca(
+                                                                    i);
+                                                          },
+                                                          child: listCuaca(value
+                                                              .modelListCuaca[i]))
+                                                  ],
+                                                )),
                                           ],
                                         ),
-                                        const SizedBox(width: 15),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              "Besok",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                            Container(
-                                              width: 50,
-                                              height: 2,
-                                              color: Colors.transparent,
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Row(
-                                        children: [
-                                          const SizedBox(
-                                            width: 20,
-                                          ),
-                                          for (var i = 0;
-                                              i < value.modelListCuaca.length;
-                                              i++)
-                                            GestureDetector(
-                                              onTap: () {
-                                                value.selectIndexCuaca(i);
-                                              },
-                                              child: Container(
-                                                margin: const EdgeInsets.only(
-                                                    right: 20),
-                                                color: Colors.transparent,
-                                                child: Column(children: [
-                                                  Text(
-                                                    value.modelListCuaca[i]
-                                                            .jamCuaca!.hour
-                                                            .toString() +
-                                                        " : " +
-                                                        value.modelListCuaca[i]
-                                                            .jamCuaca!.minute
-                                                            .toString(),
-                                                  ),
-                                                  const SizedBox(height: 30),
-                                                  const Icon(
-                                                    Icons.cloud_outlined,
-                                                    size: 40,
-                                                  ),
-                                                  const SizedBox(height: 30),
-                                                  Text(
-                                                    value.modelListCuaca[i]
-                                                            .tempC! +
-                                                        "\u00B0",
-                                                    style: const TextStyle(),
-                                                  ),
-                                                ]),
-                                              ),
-                                            )
-                                        ],
-                                      )),
-                                ],
+                                      ),
+                                    ]),
+                              ),
+                            )
+                          : Scaffold(
+                              backgroundColor: Colors.white,
+                              body: Center(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(value.errorMessage ?? "error"),
+                                    TextButton(
+                                        onPressed: () {
+                                          value.getCuca(value1.selectedCity!.id
+                                              .toString());
+                                        },
+                                        child: const Text("reload"))
+                                  ],
+                                ),
                               ),
                             );
-                          }),
-                        ]),
-                  ),
-                )
+                })
               : Scaffold(
                   backgroundColor: Colors.white,
                   body: Center(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(value.errorMessage ?? "error"),
-                      TextButton(
-                          onPressed: () {
-                            value.getCuca();
-                          },
-                          child: const Text("reload"))
-                    ],
-                  )));
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(value1.errorMessage ?? "error"),
+                        TextButton(
+                            onPressed: () {
+                              value1.getCity();
+                            },
+                            child: const Text("reload"))
+                      ],
+                    ),
+                  ),
+                );
     });
   }
-}
-
-Widget top(ModelListCuaca cuaca) {
-  return Column(
-    children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Text(
-            "Aceh",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Icon(Icons.arrow_drop_down, color: Colors.white)
-        ],
-      ),
-      const SizedBox(
-        height: 5,
-      ),
-      const Text("Kota Banda Aceh",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 14,
-          )),
-      const SizedBox(
-        height: 30,
-      ),
-      Text(
-        cuaca.tempC.toString() + "\u00B0",
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 80,
-        ),
-      ),
-      const SizedBox(
-        height: 30,
-      ),
-      Text(
-        cuaca.jamCuaca!.day.toString() +
-            "-" +
-            cuaca.jamCuaca!.month.toString() +
-            "-" +
-            cuaca.jamCuaca!.year.toString(),
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 14,
-        ),
-      ),
-      const SizedBox(
-        height: 5,
-      ),
-      Text(
-        cuaca.cuaca!,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      const Icon(
-        Icons.cloud,
-        color: Colors.white,
-        size: 90,
-      ),
-    ],
-  );
 }
 
 Widget wavew() {
